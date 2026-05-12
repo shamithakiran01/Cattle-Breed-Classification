@@ -15,9 +15,6 @@ This project solves this by delivering an end-to-end deep learning pipeline and 
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue) ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green) ![React](https://img.shields.io/badge/React-18-61DAFB) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-### 🟢 Live Demo
-**Test the fully deployed Vision Transformer natively in the browser here:**
-👉 **[https://huggingface.co/spaces/sajit9285/cattle-breed-classifier](https://huggingface.co/spaces/sajit9285/cattle-breed-classifier)**
 
 ---
 
@@ -80,30 +77,6 @@ Based on our automated scoring system—which weighs 50% F1, 20% Accuracy, 15% L
 
 ---
 
-## 🚀 Deployment Pipeline
-
-This application leverages a completely unified, containerized deployment mechanic utilizing Docker.
-
-### Running Natively (FastAPI Unified Server)
-For zero-dependency deployment, we bundle the built React Static files and serve them natively over the FastAPI Python server.
-```bash
-# 1. Build the frontend (Node 20+)
-cd frontend && npm install && npm run build
-cd ..
-
-# 2. Start the unified server mapping the optimal architecture
-export MODEL_PATH=models/vit_best.pth MODEL_NAME=vit
-python3 -m pip install -r backend/requirements.txt
-uvicorn backend.app.main:app --host 0.0.0.0 --port 7860
-```
-Then navigate to **http://localhost:7860**.
-
-### Active Cloud Deployment (Hugging Face Spaces)
-The environment has been securely deployed to Hugging Face Spaces via an automated API deployer mapping our unified `Dockerfile`. The space automatically bakes in the Node.js compiled frontend, caches the 460MB ViT model, and publicly maps the server securely.
-
-**Access it here:** [https://huggingface.co/spaces/sajit9285/cattle-breed-classifier](https://huggingface.co/spaces/sajit9285/cattle-breed-classifier)
-
----
 
 ## ⚡ How to Train in Colab
 
