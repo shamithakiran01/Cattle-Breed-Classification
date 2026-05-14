@@ -7,11 +7,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/predict': 'http://localhost:8000',
-      '/breeds': 'http://localhost:8000',
-      '/health': 'http://localhost:8000',
-      '/version': 'http://localhost:8000',
-      '/docs': 'http://localhost:8000',
+      '/predict': 'http://localhost:7860',
+      '/breeds': 'http://localhost:7860',
+      '/health': 'http://localhost:7860',
+      '/version': 'http://localhost:7860',
+      '/docs': 'http://localhost:7860',
+      '/auth': 'http://localhost:7860',
     },
   },
 })

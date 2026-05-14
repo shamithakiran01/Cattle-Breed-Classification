@@ -17,16 +17,51 @@ export async function predictFromFile(file, topK = 3) {
   return response.json();
 }
 
-export async function predictFromURL(url, topK = 3) {
-  const response = await fetch(`${API_BASE_URL}/predict/url`, {
+export async function loginUser(username, password) {
+  const formData = new URLSearchParams();
+  formData.append('username', username);
+  formData.append('password', password);
+
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url, top_k: topK }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formData,
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.detail || 'Prediction failed');
+    throw new Error(error.detail || 'Login failed');
+  }
+
+  return response.json();
+}
+
+export async function registerUser(username, email, password) {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Registration failed');
+  }
+
+  return response.json();
+}
+
+export async function getProfile(token) {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch profile');
   }
 
   return response.json();

@@ -37,7 +37,7 @@ function HomePage() {
                         <div className="feature-card">
                             <div className="feature-icon-wrapper">📸</div>
                             <h3>Multiple Input Modes</h3>
-                            <p>Upload images, capture directly from your camera, or paste a URL. Works seamlessly on any device with a browser.</p>
+                            <p>Upload images or capture directly from your camera. Works seamlessly on any device with a browser.</p>
                         </div>
                         <div className="feature-card">
                             <div className="feature-icon-wrapper">🐃</div>
@@ -52,7 +52,7 @@ function HomePage() {
                         <div className="feature-card">
                             <div className="feature-icon-wrapper">🌐</div>
                             <h3>Multi-Language Support</h3>
-                            <p>View breed information and classifications in English, Hindi, Telugu, Tamil, Kannada, and Marathi.</p>
+                            <p>View breed information and classifications in English, Hindi, Telugu, Tamil, and Marathi.</p>
                         </div>
                         <div className="feature-card">
                             <div className="feature-icon-wrapper">⚡</div>

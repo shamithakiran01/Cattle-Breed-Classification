@@ -16,7 +16,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from backend.app.core.config import get_settings
 from backend.app.core.logging import logger
-from backend.app.api.routes import health, predict, metadata
+from backend.app.api.routes import health, predict, metadata, auth
+from backend.app.db.database import engine, Base
 from backend.app.services.inference import inference_service
 from backend.app.services.breed_info import breed_info_service
 
@@ -29,6 +30,7 @@ async def lifespan(app: FastAPI):
     try:
         inference_service.load()
         breed_info_service.load()
+        Base.metadata.create_all(bind=engine)
         logger.info("All services loaded successfully")
     except Exception as e:
         logger.error(f"Startup error: {e}")
@@ -70,6 +72,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(predict.router)
     app.include_router(metadata.router)
+    app.include_router(auth.router)
 
     # Serve Static frontend if it exists
     static_dir = PROJECT_ROOT / "frontend" / "dist"

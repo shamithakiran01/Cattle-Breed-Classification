@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { predictFromFile, predictFromURL, predictFromBase64 } from '../services/api';
+import { predictFromFile, predictFromBase64 } from '../services/api';
 import { usePredictionHistory } from '../hooks/usePredictionHistory';
 import { LANGUAGES, UI_TRANSLATIONS, USE_TRANSLATIONS, getBreedDescription, getTranslatedBreedName, getTranslatedRegion } from '../data/translations';
 
@@ -7,7 +7,7 @@ function PredictPage() {
     const [activeTab, setActiveTab] = useState('upload');
     const [imagePreview, setImagePreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [imageUrl, setImageUrl] = useState('');
+
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
@@ -95,25 +95,24 @@ function PredictPage() {
         try {
             let response;
             if (activeTab === 'upload' && selectedFile) response = await predictFromFile(selectedFile);
-            else if (activeTab === 'url' && imageUrl) response = await predictFromURL(imageUrl);
             else if (activeTab === 'camera' && imagePreview) response = await predictFromBase64(imagePreview);
             else { setError('Please provide an image first'); setLoading(false); return; }
             setResult(response);
-            setSelectedLang('en');
+
             addPrediction(response, imagePreview);
         } catch (err) { setError(err.message || 'Prediction failed'); }
         finally { setLoading(false); }
-    }, [activeTab, selectedFile, imageUrl, imagePreview, addPrediction]);
+    }, [activeTab, selectedFile, imagePreview, addPrediction]);
 
     const getConfidenceClass = (conf) => conf >= 0.75 ? 'high' : conf >= 0.5 ? 'medium' : 'low';
-    const canPredict = (activeTab === 'upload' && selectedFile) || (activeTab === 'url' && imageUrl.trim()) || (activeTab === 'camera' && imagePreview);
+    const canPredict = (activeTab === 'upload' && selectedFile) || (activeTab === 'camera' && imagePreview);
 
     const t = UI_TRANSLATIONS[selectedLang] || UI_TRANSLATIONS.en;
 
     return (
         <div className="page">
             <h2 className="section-title">Predict Breed</h2>
-            <p className="section-subtitle">Upload an image, use your camera, or paste a URL to identify the breed.</p>
+            <p className="section-subtitle">Upload an image or use your camera to identify the breed.</p>
 
             <div className="predict-layout">
                 {/* Left: Input panel */}
@@ -123,8 +122,6 @@ function PredictPage() {
                             onClick={() => { setActiveTab('upload'); stopCamera(); }}>📁 Upload</button>
                         <button className={`input-tab ${activeTab === 'camera' ? 'active' : ''}`}
                             onClick={() => setActiveTab('camera')}>📷 Camera</button>
-                        <button className={`input-tab ${activeTab === 'url' ? 'active' : ''}`}
-                            onClick={() => { setActiveTab('url'); stopCamera(); }}>🔗 URL</button>
                     </div>
 
                     {activeTab === 'upload' && (
@@ -164,16 +161,7 @@ function PredictPage() {
                         </>
                     )}
 
-                    {activeTab === 'url' && (
-                        <>
-                            <label style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Image URL</label>
-                            <div className="url-input-group">
-                                <input type="url" placeholder="https://example.com/cow-image.jpg"
-                                    value={imageUrl}
-                                    onChange={(e) => { setImageUrl(e.target.value); setImagePreview(e.target.value); }} />
-                            </div>
-                        </>
-                    )}
+
 
                     {imagePreview && (
                         <div className="image-preview">

@@ -9,7 +9,6 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Query
 
 from backend.app.schemas.predict import (
     PredictResponse,
-    PredictURLRequest,
     PredictBase64Request,
     PredictionItem,
     BreedInfo,
@@ -17,7 +16,6 @@ from backend.app.schemas.predict import (
 from backend.app.services.inference import inference_service
 from backend.app.services.image_loader import (
     load_image_from_upload,
-    load_image_from_url,
     load_image_from_base64,
 )
 from backend.app.services.breed_info import breed_info_service
@@ -58,23 +56,6 @@ async def predict_file(
         contents = await file.read()
         image = load_image_from_upload(contents)
         result = inference_service.predict(image, top_k=top_k)
-        return _build_response(result)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        logger.error(f"Prediction error: {e}")
-        raise HTTPException(status_code=500, detail="Prediction failed")
-
-
-@router.post("/url", response_model=PredictResponse)
-async def predict_url(request: PredictURLRequest):
-    """Predict breed from image URL."""
-    if not inference_service.is_loaded:
-        raise HTTPException(status_code=503, detail="Model not loaded")
-
-    try:
-        image = load_image_from_url(request.url)
-        result = inference_service.predict(image, top_k=request.top_k)
         return _build_response(result)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
